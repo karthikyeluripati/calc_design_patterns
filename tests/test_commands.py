@@ -2,6 +2,10 @@ import pytest
 from app import App
 from app.commands.goodbye import GoodbyeCommand
 from app.commands.greet import GreetCommand
+from app.commands.add import AddCommand
+from app.commands.subtract import SubtractCommand
+from app.commands.multiply import MultiplyCommand
+from app.commands.divide import DivideCommand
 
 def test_greet_command(capfd):
     command = GreetCommand()
@@ -28,6 +32,75 @@ def test_goodbye_command(capfd):
     command.execute("See you", farewell="Adios")
     out, err = capfd.readouterr()
     assert out == "See you\n", "The GoodbyeCommand should print 'See you'"
+
+def test_add_command(capfd):
+    command = AddCommand()
+
+    # Test with correct number of arguments
+    command.execute(["2", "3"])
+    out, err = capfd.readouterr()
+    assert out == "Result: 5.0\n", "The AddCommand should print 'Result: 5.0'"
+
+    # Test with incorrect number of arguments
+    command.execute(["2"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'add' command.\n", "The AddCommand should print 'Invalid number of arguments for 'add' command.'"
+
+def test_divide_command(capfd):
+    command = DivideCommand()
+
+    # Test with correct number of arguments
+    command.execute(["6", "2"])
+    out, err = capfd.readouterr()
+    assert out == "Result: 3.0\n", "The DivideCommand should print 'Result: 3.0'"
+
+    # Test with division by zero
+    command.execute(["6", "0"])
+    out, err = capfd.readouterr()
+    assert out == "Error: Cannot divide by zero.\n", "The DivideCommand should print 'Error: Cannot divide by zero.'"
+
+     # Test with incorrect number of arguments
+    command.execute(["6"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'divide' command.\n", "The DivideCommand should print 'Invalid number of arguments for 'divide' command.'"
+
+    command.execute(["6", "2", "3"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'divide' command.\n", "The DivideCommand should print 'Invalid number of arguments for 'divide' command.'"
+
+def test_multiply_command(capfd):
+    command = MultiplyCommand()
+
+    # Test with correct number of arguments
+    command.execute(["2", "3"])
+    out, err = capfd.readouterr()
+    assert out == "Result: 6.0\n", "The MultiplyCommand should print 'Result: 6.0'"
+
+     # Test with incorrect number of arguments
+    command.execute(["2"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'multiply' command.\n", "The MultiplyCommand should print 'Invalid number of arguments for 'multiply' command.'"
+
+    command.execute(["2", "3", "4"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'multiply' command.\n", "The MultiplyCommand should print 'Invalid number of arguments for 'multiply' command.'"
+
+def test_subtract_command(capfd):
+    command = SubtractCommand()
+
+    # Test with correct number of arguments
+    command.execute(["5", "3"])
+    out, err = capfd.readouterr()
+    assert out == "Result: 2.0\n", "The SubtractCommand should print 'Result: 2.0'"
+
+    # Test with incorrect number of arguments
+    command.execute(["5"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'subtract' command.\n", "The SubtractCommand should print 'Invalid number of arguments for 'subtract' command.'"
+
+    command.execute(["5", "3", "2"])
+    out, err = capfd.readouterr()
+    assert out == "Invalid number of arguments for 'subtract' command.\n", "The SubtractCommand should print 'Invalid number of arguments for 'subtract' command.'"
 
 def test_app_greet_command(capfd, monkeypatch):
     """Test that the REPL correctly handles the 'greet' command."""

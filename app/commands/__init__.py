@@ -12,8 +12,8 @@ class CommandHandler:
         self.commands[command_name] = command
 
     def execute_command(self, command_name: str, *args, **kwargs):
-        if command_name in self.commands:
+        try:
             # Passing additional arguments to the command's execute method
             self.commands[command_name].execute(*args, **kwargs)
-        else:
+        except KeyError:
             print(f"No such command: {command_name}")

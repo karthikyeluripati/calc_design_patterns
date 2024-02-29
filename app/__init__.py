@@ -1,38 +1,51 @@
+import os
+import imp
 from app.commands import CommandHandler
-from app.commands.menu import MenuCommand
-from app.commands.exit import ExitCommand
-from app.commands.goodbye import GoodbyeCommand
-from app.commands.greet import GreetCommand
-from app.commands.add import AddCommand
-from app.commands.subtract import SubtractCommand
-from app.commands.multiply import MultiplyCommand
-from app.commands.divide import DivideCommand
+from app.plugins.menu import MenuCommand
 
 class App:
     def __init__(self):
         self.command_handler = CommandHandler()
-        self.register_commands()
+        self.load_commands()
 
-    def register_commands(self):
-        self.command_handler.register_command("greet", GreetCommand())
-        self.command_handler.register_command("goodbye", GoodbyeCommand())
-        self.command_handler.register_command("exit", ExitCommand())
-        self.command_handler.register_command("add", AddCommand())
-        self.command_handler.register_command("subtract", SubtractCommand())
-        self.command_handler.register_command("multiply", MultiplyCommand())
-        self.command_handler.register_command("divide", DivideCommand())
-        self.command_handler.register_command("menu", MenuCommand(self.command_handler))
+    def load_commands(self):
+        command_directory = "app/plugins"  # Specify the directory where your command plugins are stored
+
+        # Iterate through subdirectories in the command directory
+        for subdirectory in os.listdir(command_directory):
+            subdirectory_path = os.path.join(command_directory, subdirectory)
+            
+            if os.path.isdir(subdirectory_path):
+                try:
+                    if subdirectory.lower() == "menu":
+                        # If the subdirectory is "menu", instantiate MenuCommand with command_handler
+                        command_instance = MenuCommand(self.command_handler)
+                    else:
+                        # Assuming the command file is named as command_name_command.py
+                        command_file = f"__init__"
+                        module = imp.load_source(command_file, os.path.join(subdirectory_path, f"__init__.py"))
+
+                        # Assuming the command class is named as CommandNameCommand
+                        command_class = getattr(module, f"{subdirectory.capitalize()}Command")
+                        command_instance = command_class()
+
+                    self.command_handler.register_command(subdirectory, command_instance)
+                except Exception as e:
+                    print(f"Error loading command from {subdirectory_path}: {str(e)}")
 
     def start(self):
         print("Type 'exit' to exit.")
         while True:
             user_input = input(">>> ").strip().split()
-            command_name = user_input[0]
+            
+            if not user_input:
+                print("Please enter a command.")
+                continue
+            
+            command_name = user_input[0].lower()
             args = user_input[1:]
 
-            if command_name.lower() == "menu":
-                # For the "menu" command, just execute without additional arguments
-                self.command_handler.execute_command(command_name)
-            else:
-                # For other commands, pass the args
+            try:
                 self.command_handler.execute_command(command_name, args)
+            except Exception as e:
+                print(f"Error: {str(e)}")

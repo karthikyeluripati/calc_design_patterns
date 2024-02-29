@@ -1,5 +1,9 @@
+import os
 import pytest
+from unittest.mock import patch, MagicMock
 from app import App
+from app.commands import CommandHandler
+from app.plugins.menu import MenuCommand
 
 def test_app_start_exit_command(capfd, monkeypatch):
     """Test that the REPL exits correctly on 'exit' command."""
@@ -41,13 +45,13 @@ def test_app_start_menu_command(capfd, monkeypatch):
     captured = capfd.readouterr()
     expected_output = """Type 'exit' to exit.
 Available Commands:
-- greet
-- goodbye
-- exit
-- add
-- subtract
 - multiply
+- goodbye
 - divide
+- exit
+- greet
+- subtract
 - menu
+- add
 """
     assert captured.out.strip() == expected_output.strip()

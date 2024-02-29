@@ -7,7 +7,7 @@ from app.commands.subtract import SubtractCommand
 from app.commands.multiply import MultiplyCommand
 from app.commands.divide import DivideCommand
 from app.commands.exit import ExitCommand
-from app.commands import MenuCommand
+from app.commands.menu import MenuCommand
 from app.commands import CommandHandler
 
 def test_greet_command(capfd):

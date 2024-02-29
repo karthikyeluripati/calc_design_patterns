@@ -1,4 +1,5 @@
-from app.commands import CommandHandler, MenuCommand
+from app.commands import CommandHandler
+from app.commands.menu import MenuCommand
 from app.commands.exit import ExitCommand
 from app.commands.goodbye import GoodbyeCommand
 from app.commands.greet import GreetCommand

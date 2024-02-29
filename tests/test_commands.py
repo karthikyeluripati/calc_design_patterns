@@ -6,6 +6,9 @@ from app.commands.add import AddCommand
 from app.commands.subtract import SubtractCommand
 from app.commands.multiply import MultiplyCommand
 from app.commands.divide import DivideCommand
+from app.commands.exit import ExitCommand
+from app.commands import MenuCommand
+from app.commands import CommandHandler
 
 def test_greet_command(capfd):
     command = GreetCommand()
@@ -112,3 +115,32 @@ def test_app_greet_command(capfd, monkeypatch):
     with pytest.raises(SystemExit) as e:
         app.start()
     assert str(e.value) == "Exiting...\nExit Code: 0", "The app did not exit as expected"
+
+def test_menu_command(capfd):
+    command_handler = CommandHandler()
+    menu_command = MenuCommand(command_handler)
+
+    # Register commands
+    command_handler.register_command("greet", GreetCommand())
+    command_handler.register_command("goodbye", GoodbyeCommand())
+    command_handler.register_command("exit", ExitCommand())
+    command_handler.register_command("add", AddCommand())
+    command_handler.register_command("subtract", SubtractCommand())
+    command_handler.register_command("multiply", MultiplyCommand())
+    command_handler.register_command("divide", DivideCommand())
+    command_handler.register_command("menu", menu_command)
+
+    # Execute MenuCommand
+    menu_command.execute()
+    out, err = capfd.readouterr()
+    expected_output = """Available Commands:
+- greet
+- goodbye
+- exit
+- add
+- subtract
+- multiply
+- divide
+- menu
+"""
+    assert out == expected_output, "MenuCommand did not print the expected output"

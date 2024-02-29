@@ -12,7 +12,8 @@ disable= unused-argument,
          redefined-outer-name,
          unused-variable,
          missing-module-docstring,
-         missing-function-docstring
+         missing-function-docstring,
+         duplicate-code
 
 [REPORTS]
 # Set the output format. Available formats: text, parseable, colorized, json, msvs (visual studio) and html

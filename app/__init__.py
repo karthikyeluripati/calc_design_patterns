@@ -1,4 +1,4 @@
-from app.commands import CommandHandler
+from app.commands import CommandHandler, MenuCommand
 from app.commands.exit import ExitCommand
 from app.commands.goodbye import GoodbyeCommand
 from app.commands.greet import GreetCommand
@@ -20,6 +20,7 @@ class App:
         self.command_handler.register_command("subtract", SubtractCommand())
         self.command_handler.register_command("multiply", MultiplyCommand())
         self.command_handler.register_command("divide", DivideCommand())
+        self.command_handler.register_command("menu", MenuCommand(self.command_handler))
 
     def start(self):
         print("Type 'exit' to exit.")
@@ -27,4 +28,10 @@ class App:
             user_input = input(">>> ").strip().split()
             command_name = user_input[0]
             args = user_input[1:]
-            self.command_handler.execute_command(command_name, args)
+
+            if command_name.lower() == "menu":
+                # For the "menu" command, just execute without additional arguments
+                self.command_handler.execute_command(command_name)
+            else:
+                # For other commands, pass the args
+                self.command_handler.execute_command(command_name, args)

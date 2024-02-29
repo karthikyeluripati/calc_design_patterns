@@ -20,7 +20,7 @@ Following enhancements are made to the previous version.
 
 Use menu command to get the lsit of commands
 
-Arthemetic operations: <operation> <num1> <num2>
+Arthemetic operations: operation num1 num2
 
 ![alt text](image-1.png)
 
